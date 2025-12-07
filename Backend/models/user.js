@@ -8,10 +8,6 @@ const User=sequelize.define("user",{
         autoIncrement:true,
         primaryKey:true
     },
-    name:{
-        type:Sequelize.STRING,
-        allowNull:false
-    },
     email:{
         type:Sequelize.STRING,
         allowNull:false,
@@ -21,13 +17,7 @@ const User=sequelize.define("user",{
         type:Sequelize.STRING,
         allowNull:false
     },
-    ispremiumuser: {
-        type:Sequelize.BOOLEAN
-    },
-    totalExpenses:{
-        type:Sequelize.INTEGER,
-        default:0
-    }
+    
 })
 
 module.exports=User
