@@ -36,3 +36,36 @@ exports.signup = async (req, res, next) => {
     }
 };
 
+ function generateAccessToken(id,name){
+    return jwt.sign({userId:id,name:name},'secretkey')
+ }
+// Export generateAccessToken
+ exports.generateAccessToken = generateAccessToken;
+
+exports.login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    console.log("email--", email, password);
+
+    if (isStringValid(email) || isStringValid(password)) {
+      return res.status(400).json({ message: "Email or password is missing" });
+    }
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not exist" });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Password not match" });
+    }
+    return res.status(200).json({ message: "User login successful",token: generateAccessToken(
+        user.id, user.name)
+    })
+  } catch (err) {
+    console.error("Login error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

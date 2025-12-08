@@ -2,6 +2,6 @@ import React from 'react'
 
 export const Expence = () => {
   return (
-    <div>Expence</div>
+    <div>Welcome to Expence page</div>
   )
 }

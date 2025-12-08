@@ -12,7 +12,9 @@ function App() {
       <Heading/>
      <Routes>
       <Route path="/" element={<Signup/>}/>
+      <Route path="/signup" element={<Signup/>}/>
       <Route path="/login" element={<Login/>}/>
+      <Route path="/expence" element={<Expence/>}/>
      </Routes>
       
        

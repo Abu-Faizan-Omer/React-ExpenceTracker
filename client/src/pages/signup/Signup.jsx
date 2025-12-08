@@ -33,7 +33,7 @@ const Signup = () => {
 
       if (response.status === 201) {
         alert("User signed up successfully");
-        navigate("/login"); // ✅ React Router redirect
+        navigate("/login"); 
       } else {
         throw new Error("Failed to signup");
       }
