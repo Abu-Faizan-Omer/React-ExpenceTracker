@@ -45,7 +45,7 @@ exports.signup = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log("email--", email, password);
+    //console.log("email--", email, password);
 
     if (isStringValid(email) || isStringValid(password)) {
       return res.status(400).json({ message: "Email or password is missing" });
@@ -62,10 +62,36 @@ exports.login = async (req, res, next) => {
       return res.status(401).json({ message: "Password not match" });
     }
     return res.status(200).json({ message: "User login successful",token: generateAccessToken(
-        user.id, user.name)
+        user.id, user.name), userId: user.id, name: user.name
     })
   } catch (err) {
     console.error("Login error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
+};
+
+exports.updateProfile = async (req, res, next) => {
+    try {
+        const { name, photoURL } = req.body;
+        const userId = req.user.id; 
+
+        // Update user
+        const updatedUser = await User.update(
+            { name, photoURL },
+            { where: { id: userId } }
+        );
+
+        if (updatedUser[0] === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json({ 
+            message: "Profile updated successfully",
+            user: { name, photoURL }
+        });
+
+    } catch (err) {
+        console.error("Update profile error:", err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
 };
