@@ -1,25 +1,29 @@
-const jwt=require("jsonwebtoken")
-const User=require("../models/user")
 
-const authenticate=(req,res,next)=>{
-    try{
-        const token=req.header("Authorization")
-        console.log(token)
-        if (!token) {
-            throw new Error("Token missing");
-          }
-        const user=jwt.verify(token,'secretkey')
-        console.log("userId>>>>",user.userId)
-        User.findByPk(user.userId).then(user =>{
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 
-            req.user=user
-            next()
-        })
-    }catch(err){
-        console.log(err)
-        return res.status(401).json({success:false})
+const authenticate = (req, res, next) => {
+  try {
+    let token = req.header("Authorization")
+    
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Token missing" })
     }
-}
-module.exports={
-    authenticate
-}    
+    
+   
+    if (token.startsWith("Bearer ")) {
+      token = token.slice(7); // "Bearer abc123" → "abc123"
+    }
+    
+    const decoded = jwt.verify(token, 'secretkey');
+    console.log(" User ID:", decoded.userId);
+    
+    req.user = { id: decoded.userId } // { userId: 1 }
+    next();
+  } catch (err) {
+    console.error(" Auth error:", err.message);
+    return res.status(401).json({ success: false });
+  }
+};
+
+module.exports = { authenticate };

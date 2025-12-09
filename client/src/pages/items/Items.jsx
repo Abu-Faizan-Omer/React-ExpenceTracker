@@ -17,7 +17,7 @@ const Items = ({expenses,onDelete, onEdit}) => {
           ) : (
             expenses.map((expense) => (
               <div key={expense.id} style={{backgroundColor:"black", display:'flex',marginBottom: '10px'}} className='items'>
-                <strong>₹{expense.expence}</strong> - {expense.description} - {expense.cat}
+                <strong>₹{expense.amount}</strong> - {expense.description} ------- {expense.category}
                 <button type='button' onClick={() => handleEdit(expense)}>Edit</button><br />
                 <button type='button' onClick={() => handleDelete(expense.id)}>Delete</button>
               </div>
