@@ -25,7 +25,7 @@ exports.getExpenses = async (req, res) => {
   try {
     const userId = req.user.id;
     const expenses = await Expense.findAll({ where: { userId } });
-    res.status(200).json({message:"get expence from backend",expenses});
+    res.status(200).json(expenses);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -50,9 +50,10 @@ exports.deleteExpense = async (req, res) => {
   }
 };
 
+
 exports.updateExpense = async (req, res) => {
   try {
-    console.log("update edit")
+    console.log("update edit");
     const expenseId = req.params.id;
     const userId = req.user.id;
     const { expence, description, cat } = req.body;
@@ -61,19 +62,25 @@ exports.updateExpense = async (req, res) => {
       {
         amount: parseFloat(expence),
         description,
-        category: cat
+        category: cat,
       },
       {
-        where: { id: expenseId, userId }
+        where: { id: expenseId, userId },
       }
     );
 
     if (updated === 0) {
       return res.status(404).json({ message: "Expense not found" });
     }
+    const updatedExpense = await Expense.findOne({
+      where: { id: expenseId, userId },
+    });
 
-    res.status(200).json({ message: "Expense updated successfully" });
+    return res
+      .status(200)
+      .json({ message: "Expense updated successfully", expense: updatedExpense });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Update expense error:", err);
+    return res.status(500).json({ error: err.message });
   }
 };
